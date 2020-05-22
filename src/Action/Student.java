@@ -18,10 +18,9 @@ import java.text.SimpleDateFormat;
 import java.util.Random;
 import java.util.Vector;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
 public class Student extends javax.swing.JFrame {
 
     Connection conn;
@@ -35,10 +34,7 @@ public class Student extends javax.swing.JFrame {
      * Creates new form Student
      */
     public Student() {
-        super("Student Registration...");
-        initComponents();
-        loadData();
-        showData();
+        
     }
 
     Student(String uname, String utype) {
@@ -47,11 +43,11 @@ public class Student extends javax.swing.JFrame {
         this.uname = uname;
         this.utype = utype;
         initComponents();
-        loadData();
+        loadComboBoxData();
         showData();
     }
     
-    public void loadData()
+    public void loadComboBoxData()
     {
         try
         {
@@ -83,37 +79,55 @@ public class Student extends javax.swing.JFrame {
     public void showData()
     {
         String sql = "select * from Student";
-        dtm = (DefaultTableModel)jTable1.getModel();
         try
         {
             conn = javaConnect.connectDb();
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
             
-            ResultSetMetaData rsd = rs.getMetaData();
-            int c = rsd.getColumnCount();
-            //dtm = (DefaultTableModel)jTable1.getModel();
+            dtm = (DefaultTableModel)jTable1.getModel();
             dtm.setRowCount(0);
+            
             int s=1;
             while(rs.next())
             {
                 Vector v = new Vector();
-                for(int i=1; i<=c; i++)
-                {
-                    v.add(s);
-                    v.add(rs.getString("Id"));
-                    v.add(rs.getString("Name"));    // pass database column name
-                    v.add(rs.getString("F_Name"));  // pass database column name
-                    v.add(rs.getString("DOB"));    // pass database column name
-                    v.add(rs.getString("Gender"));  // pass database column name
-                    v.add(rs.getString("Contact"));    // pass database column name
-                    v.add(rs.getString("Address"));  // pass database column name
-                    v.add(rs.getString("Class"));    // pass database column name
-                    v.add(rs.getString("Section"));    // pass database column name
-                }
+                
+                v.add(s);
+                v.add(rs.getString("Id"));
+                v.add(rs.getString("Name"));    // pass database column name
+                v.add(rs.getString("F_Name"));  // pass database column name
+                v.add(rs.getString("DOB"));    // pass database column name
+                v.add(rs.getString("Gender"));  // pass database column name
+                v.add(rs.getString("Contact"));    // pass database column name
+                v.add(rs.getString("Address"));  // pass database column name
+                v.add(rs.getString("Class"));    // pass database column name
+                v.add(rs.getString("Section"));    // pass database column name
+
                 dtm.addRow(v);
                 s++;
             }
+            
+            /*
+            ResultSetMetaData rsd = rs.getMetaData();
+            int c = rsd.getColumnCount();
+            
+            dtm = (DefaultTableModel)jTable1.getModel();
+            dtm.setRowCount(0);
+            
+            int s=1;
+            while(rs.next())
+            {
+                Vector v = new Vector();
+                v.add(s);
+            
+                for(int i=1; i<=c; i++)
+                    v.add(rs.getString(i));
+            
+                dtm.addRow(v);
+                s++;
+            }
+            */
             
             rs.close();
             pst.close();
@@ -130,7 +144,7 @@ public class Student extends javax.swing.JFrame {
         jTextField1.setText("");
         jTextField2.setText("");
         jComboBox1.setSelectedIndex(0);
-        //jDateChooser1.cleanup();
+        jDateChooser1.setCalendar(null);
         jTextField3.setText("");
         jTextField4.setText("");
         jComboBox2.setSelectedIndex(0);
@@ -450,12 +464,11 @@ public class Student extends javax.swing.JFrame {
             
             jDateChooser1.setDate(d);
             
-            
-            
             jButton1.setEnabled(false);
             jTextField1.requestFocus();
-        } catch (ParseException ex) {
-            Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
+            
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(null, e);
         }
 
     }//GEN-LAST:event_jTable1MouseClicked
@@ -481,8 +494,8 @@ public class Student extends javax.swing.JFrame {
             pst.setString(4, (String)jComboBox1.getSelectedItem().toString());
             pst.setString(5, jTextField3.getText());
             pst.setString(6, jTextField4.getText());
-            pst.setString(7, (String)jComboBox1.getSelectedItem().toString());
-            pst.setString(8, (String)jComboBox1.getSelectedItem().toString());
+            pst.setString(7, (String)jComboBox2.getSelectedItem().toString());
+            pst.setString(8, (String)jComboBox3.getSelectedItem().toString());
             pst.setString(9, id);
             pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "Student Edit Successfuly");

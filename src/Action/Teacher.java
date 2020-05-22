@@ -15,7 +15,6 @@ import Helper.javaConnect;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.util.Random;
 import java.util.Vector;
 import javax.swing.JOptionPane;
@@ -32,9 +31,7 @@ public class Teacher extends javax.swing.JFrame {
      * Creates new form Student
      */
     public Teacher() {
-        super("Teacher Registration...");
-        initComponents();
-        showData();
+        
     }
 
     Teacher(String uname, String utype) {
@@ -56,29 +53,49 @@ public class Teacher extends javax.swing.JFrame {
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
             
-            ResultSetMetaData rsd = rs.getMetaData();
-            int c = rsd.getColumnCount();
             dtm = (DefaultTableModel)jTable1.getModel();
             dtm.setRowCount(0);
+            
             int s=1;
+            
             while(rs.next())
             {
                 Vector v = new Vector();
-                for(int i=1; i<=c; i++)
-                {
-                    v.add(s);
-                    v.add(rs.getString("Id"));
-                    v.add(rs.getString("Name"));    // pass database column name
-                    v.add(rs.getString("Qualification"));  // pass database column name
-                    v.add(rs.getString("Salary"));    // pass database column name
-                    v.add(rs.getString("Contact"));    // pass database column name
-                    v.add(rs.getString("Email"));  // pass database column name
-                    v.add(rs.getString("Address"));  // pass database column name
-                }
+                
+                v.add(s);
+                v.add(rs.getString("Id"));
+                v.add(rs.getString("Name"));    // pass database column name
+                v.add(rs.getString("Qualification"));  // pass database column name
+                v.add(rs.getString("Salary"));    // pass database column name
+                v.add(rs.getString("Contact"));    // pass database column name
+                v.add(rs.getString("Email"));  // pass database column name
+                v.add(rs.getString("Address"));  // pass database column name
+
                 dtm.addRow(v);
                 s++;
-                
             }
+            
+            /*
+            ResultSetMetaData rsd = rs.getMetaData();
+            int c = rsd.getColumnCount();
+            
+            dtm = (DefaultTableModel)jTable1.getModel();
+            dtm.setRowCount(0);
+            
+            int s=1;
+            
+            while(rs.next())
+            {
+                Vector v = new Vector();
+                    v.add(s);
+            
+                for(int i=1; i<=c; i++)
+                    v.add(rs.getString(i));
+            
+                dtm.addRow(v);
+                s++;
+            }
+            */
             
             rs.close();
             pst.close();
@@ -386,6 +403,7 @@ public class Teacher extends javax.swing.JFrame {
         {
             conn = javaConnect.connectDb();
             pst = conn.prepareStatement(sql);
+            
             pst.setString(1, jTextField1.getText());
             pst.setString(2, jTextField2.getText());
             pst.setString(3, jTextField3.getText());
@@ -393,6 +411,7 @@ public class Teacher extends javax.swing.JFrame {
             pst.setString(5, jTextField5.getText());
             pst.setString(6, jTextField6.getText());
             pst.setString(7, id);
+            
             pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "Teacher Information Edit Successfuly");
             

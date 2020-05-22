@@ -23,13 +23,12 @@ public class Classes extends javax.swing.JFrame {
     ResultSet rs;
 
     String uname,utype;
+    
     /**
      * Creates new form Classes
      */
     public Classes() {
-        super("Class");
-        initComponents();
-        showData();
+        
     }
 
     Classes(String uname, String utype) {
@@ -44,30 +43,50 @@ public class Classes extends javax.swing.JFrame {
     public void showData()
     {
         String sql = "select * from Class";
-        dtm = (DefaultTableModel)jTable1.getModel();
         try
         {
             conn = javaConnect.connectDb();
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
             
-            ResultSetMetaData rsd = rs.getMetaData();
-            int c = rsd.getColumnCount();
             dtm = (DefaultTableModel)jTable1.getModel();
             dtm.setRowCount(0);
+            
             int s=1;
+            
             while(rs.next())
             {
                 Vector v = new Vector();
-                for(int i=1; i<=c; i++)
-                {
-                    v.add(s);
-                    v.add(rs.getString("Name"));
-                    v.add(rs.getString("Section"));
-                }
+                
+                v.add(s);
+                v.add(rs.getString("Name"));
+                v.add(rs.getString("Section"));
+                
                 dtm.addRow(v);
                 s++;
             }
+            
+            /*
+            ResultSetMetaData rsd = rs.getMetaData();
+            int c = rsd.getColumnCount();
+            
+            dtm = (DefaultTableModel)jTable1.getModel();
+            dtm.setRowCount(0);
+            
+            int s=1;
+            
+            while(rs.next())
+            {
+                Vector v = new Vector();
+                v.add(s);
+            
+                for(int i=1; i<=c; i++)
+                    v.add(rs.getString(i));
+                
+                dtm.addRow(v);
+                s++;
+            }
+            */
             
             rs.close();
             pst.close();
@@ -254,9 +273,11 @@ public class Classes extends javax.swing.JFrame {
         {
             conn = javaConnect.connectDb();
             pst = conn.prepareStatement(sql);
+            
             pst.setString(1, jComboBox1.getSelectedItem().toString());
             pst.setString(2, jComboBox2.getSelectedItem().toString());
             pst.execute();
+            
             JOptionPane.showMessageDialog(null, "Class Added");
             
             pst.close();
@@ -264,6 +285,7 @@ public class Classes extends javax.swing.JFrame {
             
             showData();
             clear();
+            
         }catch(Exception e)
         {
             JOptionPane.showMessageDialog(null, e);
@@ -282,10 +304,12 @@ public class Classes extends javax.swing.JFrame {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
         dtm = (DefaultTableModel)jTable1.getModel();
+        
         int selectIndex = jTable1.getSelectedRow();
-        String id = dtm.getValueAt(selectIndex, 0).toString();
+        
         jComboBox1.setSelectedItem(dtm.getValueAt(selectIndex, 1).toString());
         jComboBox2.setSelectedItem(dtm.getValueAt(selectIndex, 2).toString());
+        
         jButton1.setEnabled(false);
     }//GEN-LAST:event_jTable1MouseClicked
 
@@ -304,8 +328,8 @@ public class Classes extends javax.swing.JFrame {
             conn = javaConnect.connectDb();
             pst = conn.prepareStatement(sql);
             pst.execute();
-            JOptionPane.showMessageDialog(null, "Class Deleted Successfuly");
             
+            JOptionPane.showMessageDialog(null, "Class Deleted Successfuly");
             jButton1.setEnabled(true);
             
             pst.close();
@@ -313,6 +337,7 @@ public class Classes extends javax.swing.JFrame {
             
             showData();
             clear();
+            
         }catch(Exception e)
         {
             JOptionPane.showMessageDialog(null, e);

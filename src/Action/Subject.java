@@ -28,46 +28,67 @@ public class Subject extends javax.swing.JFrame {
      * Creates new form Subject
      */
     public Subject() {
-        super("Subject Information");
-        initComponents();
-        showData();
+        
     }
 
     Subject(String uname, String utype) {
         super("Subject Information");
+        
         this.uname = uname;
         this.utype = utype;
+        
         initComponents();
+        
         showData();
     }
     
     public void showData()
     {
         String sql = "select * from Subject";
-        dtm = (DefaultTableModel)jTable1.getModel();
         try
         {
             conn = javaConnect.connectDb();
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
             
-            ResultSetMetaData rsd = rs.getMetaData();
-            int c = rsd.getColumnCount();
             dtm = (DefaultTableModel)jTable1.getModel();
             dtm.setRowCount(0);
+            
             int s=1;
+            
             while(rs.next())
             {
                 Vector v = new Vector();
-                for(int i=1; i<=c; i++)
-                {
-                    v.add(s);
-                    v.add(rs.getString("Id"));    // pass database column name
-                    v.add(rs.getString("Name"));  // pass database column name
-                }
+                
+                v.add(s);
+                v.add(rs.getString("Id"));    // pass database column name
+                v.add(rs.getString("Name"));  // pass database column name
+                
                 dtm.addRow(v);
                 s++;
             }
+            
+            /*
+            ResultSetMetaData rsd = rs.getMetaData();
+            int c = rsd.getColumnCount();
+            
+            dtm = (DefaultTableModel)jTable1.getModel();
+            dtm.setRowCount(0);
+            
+            int s=1;
+            
+            while(rs.next())
+            {
+                Vector v = new Vector();
+                v.add(s);
+            
+                for(int i=1; i<=c; i++)
+                    v.add(rs.getString(i));
+                
+                dtm.addRow(v);
+                s++;
+            }
+            */
             
             rs.close();
             pst.close();
@@ -251,9 +272,12 @@ public class Subject extends javax.swing.JFrame {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
         dtm = (DefaultTableModel)jTable1.getModel();
+        
         int selectIndex = jTable1.getSelectedRow();
+        
         jTextField1.setText(dtm.getValueAt(selectIndex, 1).toString());
         jTextField2.setText(dtm.getValueAt(selectIndex, 2).toString());
+        
         saveSubject_Button.setEnabled(false);
     }//GEN-LAST:event_jTable1MouseClicked
 
@@ -266,13 +290,16 @@ public class Subject extends javax.swing.JFrame {
             pst = conn.prepareStatement(sql);
             pst.setString(1, jTextField1.getText());
             pst.setString(2, jTextField2.getText());
+            
             pst.execute();
             JOptionPane.showMessageDialog(null, "Subject Added");
             
             pst.close();
             conn.close();
+            
             showData();
             clear();
+            
         }catch(Exception e)
         {
             JOptionPane.showMessageDialog(null, e);
@@ -285,7 +312,7 @@ public class Subject extends javax.swing.JFrame {
         dtm = (DefaultTableModel)jTable1.getModel();
         int selectIndex = jTable1.getSelectedRow();
 
-        String id = dtm.getValueAt(selectIndex, 1).toString();
+        String id = dtm.getValueAt(selectIndex, 1).toString();  // primary key
 
         String sql = "delete from Subject where Id='"+id+"'";
         try

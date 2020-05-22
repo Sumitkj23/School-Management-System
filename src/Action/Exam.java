@@ -43,7 +43,9 @@ public class Exam extends javax.swing.JFrame {
         super("Exam Details");
         this.uname = uname;
         this.utype = utype;
+        
         initComponents();
+        
         loadComboBoxData();
         showData();
     }
@@ -80,6 +82,8 @@ public class Exam extends javax.swing.JFrame {
             rs.close();
             pst.close();
             
+            conn.close();
+            
         }catch(Exception e)
         {
             JOptionPane.showMessageDialog(null, e);
@@ -96,27 +100,49 @@ public class Exam extends javax.swing.JFrame {
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
             
-            ResultSetMetaData rsd = rs.getMetaData();
-            int c = rsd.getColumnCount();
             dtm = (DefaultTableModel)jTable1.getModel();
             dtm.setRowCount(0);
+            
             int s=1;
+            
             while(rs.next())
             {
                 Vector v = new Vector();
-                for(int i=1; i<=c; i++)
-                {
-                    v.add(s);
-                    v.add(rs.getString("Exam_Name"));    // pass database column name
-                    v.add(rs.getString("Shift"));  // pass database column name
-                    v.add(rs.getString("Date"));    // pass database column name
-                    v.add(rs.getString("Class"));  // pass database column name
-                    v.add(rs.getString("Section"));    // pass database column name
-                    v.add(rs.getString("Subject"));  // pass database column name
-                }
+                
+                v.add(s);
+                v.add(rs.getString("Exam_Name"));    // pass database column name
+                v.add(rs.getString("Shift"));  // pass database column name
+                v.add(rs.getString("Date"));    // pass database column name
+                v.add(rs.getString("Class"));  // pass database column name
+                v.add(rs.getString("Section"));    // pass database column name
+                v.add(rs.getString("Subject"));  // pass database column name
+                
                 dtm.addRow(v);
                 s++;
             }
+            
+            /*
+            ResultSetMetaData rsd = rs.getMetaData();
+            int c = rsd.getColumnCount();
+            
+            dtm = (DefaultTableModel)jTable1.getModel();
+            dtm.setRowCount(0);
+            
+            int s=1;
+            
+            while(rs.next())
+            {
+                Vector v = new Vector();
+            
+                v.add(s);
+            
+                for(int i=1; i<=c; i++)
+                    v.add(rs.getString(i));
+            
+                dtm.addRow(v);
+                s++;
+            }
+            */
             
             rs.close();
             pst.close();
