@@ -36,10 +36,7 @@ public class Exam extends javax.swing.JFrame {
      * Creates new form Exam
      */
     public Exam() {
-        super("Exam Details");
-        initComponents();
-        loadData();
-        showData();
+        
     }
 
     Exam(String uname, String utype) {
@@ -47,11 +44,11 @@ public class Exam extends javax.swing.JFrame {
         this.uname = uname;
         this.utype = utype;
         initComponents();
-        loadData();
+        loadComboBoxData();
         showData();
     }
     
-    public void loadData()
+    public void loadComboBoxData()
     {
         try
         {
@@ -135,14 +132,13 @@ public class Exam extends javax.swing.JFrame {
     {
         jTextField1.setText("");
         jComboBox1.setSelectedIndex(0);
-        //jDateChooser1.cleanup();
+        jDateChooser1.setCalendar(null);
         jComboBox2.setSelectedIndex(0);
         jComboBox3.setSelectedIndex(0);
         jComboBox4.setSelectedIndex(0);
         
         jTextField1.requestFocus();
     }
-    
     
 
     /**
@@ -392,6 +388,7 @@ public class Exam extends javax.swing.JFrame {
             
             pst.close();
             conn.close();
+            
             showData();
             clear();
             
@@ -406,9 +403,14 @@ public class Exam extends javax.swing.JFrame {
         dtm = (DefaultTableModel)jTable1.getModel();
         int selectIndex = jTable1.getSelectedRow();
 
-        String id = dtm.getValueAt(selectIndex, 0).toString();
+        String ename = dtm.getValueAt(selectIndex, 1).toString();
+        String shift = dtm.getValueAt(selectIndex, 2).toString();
+        String date = dtm.getValueAt(selectIndex, 3).toString();
+        String classn = dtm.getValueAt(selectIndex, 4).toString();
+        String section = dtm.getValueAt(selectIndex, 5).toString();
+        String subject = dtm.getValueAt(selectIndex, 6).toString();
 
-        String sql = "delete from Exam where Id='"+id+"'";
+        String sql = "delete from Exam where Exam_Name='"+ename+"' and Shift='"+shift+"' and Date='"+date+"' and Class='"+classn+"' and Section='"+section+"' and Subject='"+subject+"'";
         try
         {
             conn = javaConnect.connectDb();
