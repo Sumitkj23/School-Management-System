@@ -1,5 +1,8 @@
 package Action;
 
+import Account.Login;
+import javax.swing.JOptionPane;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,10 +22,12 @@ public class Teacher_Home extends javax.swing.JFrame {
      * Creates new form Home
      */
     public Teacher_Home() {
-        initComponents();
+        
     }
 
-    Teacher_Home(String u_name, String u_type) {
+    public Teacher_Home(String u_name, String u_type) {
+        super("Admin Home Page");
+        
         this.utype = u_type;
         this.uname = u_name;
         initComponents();
@@ -232,7 +237,9 @@ public class Teacher_Home extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        System.exit(0);
+        int i = JOptionPane.showConfirmDialog(null, "Are You Sure??? You Want To Exit!!!", "School Management System", JOptionPane.YES_NO_OPTION);
+        if(i == 0)
+            System.exit(0);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

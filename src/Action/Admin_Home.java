@@ -1,6 +1,7 @@
 package Action;
 
 
+import Account.Login;
 import Account.User;
 import javax.swing.JOptionPane;
 
@@ -26,6 +27,8 @@ public class Admin_Home extends javax.swing.JFrame {
     }
 
     public Admin_Home(String u_name, String u_type) {
+        super("Admin Home Page");
+        
         this.uname = u_name;
         this.utype = u_type;
         initComponents();

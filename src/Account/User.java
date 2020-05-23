@@ -30,13 +30,11 @@ public class User extends javax.swing.JFrame {
     String uname,utype;
     
     public User() {
-        super("User Page...");
-        initComponents();
-        showData();
+        
     }
 
     public User(String uname, String utype) {
-        super("User Page...");
+        super("Add New User...");
         this.uname = uname;
         this.utype = utype;
         initComponents();
@@ -52,26 +50,47 @@ public class User extends javax.swing.JFrame {
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
             
-            ResultSetMetaData rsd = rs.getMetaData();
-            int c = rsd.getColumnCount();
             dtm = (DefaultTableModel)jTable1.getModel();
             dtm.setRowCount(0);
+            
             int s=1;
+            
             while(rs.next())
             {
                 Vector v = new Vector();
-                for(int i=1; i<=c; i++)
-                {
-                    v.add(s);
-                    v.add(rs.getString("Name"));
-                    v.add(rs.getString("Contact_no"));
-                    v.add(rs.getString("Address"));
-                    v.add(rs.getString("Username"));
-                    v.add(rs.getString("User_Type"));
-                }
+
+                v.add(s);
+                v.add(rs.getString("Name"));
+                v.add(rs.getString("Contact_no"));
+                v.add(rs.getString("Address"));
+                v.add(rs.getString("Username"));
+                v.add(rs.getString("User_Type"));
+
                 dtm.addRow(v);
                 s++;
             }
+            
+            /*
+            ResultSetMetaData rsd = rs.getMetaData();
+            int c = rsd.getColumnCount();
+            
+            dtm = (DefaultTableModel)jTable1.getModel();
+            dtm.setRowCount(0);
+            
+            int s=1;
+            
+            while(rs.next())
+            {
+                Vector v = new Vector();
+                v.add(s);
+            
+                for(int i=1; i<=c; i++)
+                    v.add(rs.getString(i));
+            
+                dtm.addRow(v);
+                s++;
+            }
+            */
             
             rs.close();
             pst.close();
@@ -332,27 +351,27 @@ public class User extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel8)
-                .addGap(142, 142, 142))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(Save_User, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52)
-                .addComponent(Edit_User_Data, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42)
-                .addComponent(Clear_Data, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(91, 91, 91)
-                .addComponent(Delete_Data)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Back, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(74, 74, 74)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(76, 76, 76))
+                .addGap(168, 168, 168))
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
-                .addGap(20, 20, 20))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 543, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(56, 56, 56)
+                .addComponent(Back, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(Clear_Data, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
+                .addComponent(Save_User, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(182, 182, 182)
+                .addComponent(Edit_User_Data, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
+                .addComponent(Delete_Data)
+                .addGap(47, 47, 47)
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -365,7 +384,7 @@ public class User extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Save_User)
                     .addComponent(Edit_User_Data)
@@ -373,7 +392,7 @@ public class User extends javax.swing.JFrame {
                     .addComponent(Clear_Data)
                     .addComponent(jButton5)
                     .addComponent(Back))
-                .addGap(28, 28, 28))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         pack();
@@ -412,15 +431,17 @@ public class User extends javax.swing.JFrame {
         // TODO add your handling code here:
         dtm = (DefaultTableModel)jTable1.getModel();
         int selectIndex = jTable1.getSelectedRow();
-        String id = dtm.getValueAt(selectIndex, 0).toString();
+        
         jTextField1.setText(dtm.getValueAt(selectIndex, 4).toString());
         jTextField2.setText(dtm.getValueAt(selectIndex, 1).toString());
         jTextField3.setText(dtm.getValueAt(selectIndex, 2).toString());
         jTextField4.setText(dtm.getValueAt(selectIndex, 3).toString());
         jComboBox1.setSelectedItem(dtm.getValueAt(selectIndex, 5).toString());
+        
         jTextField1.setEnabled(false);
         jPasswordField1.setEnabled(false);
         Save_User.setEnabled(false);
+        
         jTextField2.requestFocus();
         
     }//GEN-LAST:event_jTable1MouseClicked
