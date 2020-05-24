@@ -100,6 +100,26 @@ public class Subject extends javax.swing.JFrame {
         }
     }
     
+    boolean validation()
+    {
+        boolean b = false;
+        
+        if(jTextField1.getText().trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "Plese Enter Subject Id");
+            jTextField1.requestFocus();
+        }
+        else if(jTextField2.getText().trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "Plese Enter Subject Name");
+            jTextField2.requestFocus();
+        }
+        else
+            b = true;
+        
+        return b;
+    }
+    
     void clear()
     {
         jTextField1.setText("");
@@ -283,26 +303,29 @@ public class Subject extends javax.swing.JFrame {
 
     private void saveSubject_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSubject_ButtonActionPerformed
         // TODO add your handling code here:
-        String sql = "insert into Subject(Id, Name) values(?,?)";
-        try
+        if(validation())
         {
-            conn = javaConnect.connectDb();
-            pst = conn.prepareStatement(sql);
-            pst.setString(1, jTextField1.getText());
-            pst.setString(2, jTextField2.getText());
-            
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Subject Added");
-            
-            pst.close();
-            conn.close();
-            
-            showData();
-            clear();
-            
-        }catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(null, e);
+            String sql = "insert into Subject(Id, Name) values(?,?)";
+            try
+            {
+                conn = javaConnect.connectDb();
+                pst = conn.prepareStatement(sql);
+                pst.setString(1, jTextField1.getText().trim());
+                pst.setString(2, jTextField2.getText().trim());
+
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "Subject Added");
+
+                pst.close();
+                conn.close();
+
+                showData();
+                clear();
+
+            }catch(Exception e)
+            {
+                JOptionPane.showMessageDialog(null, e);
+            }
         }
     }//GEN-LAST:event_saveSubject_ButtonActionPerformed
 
