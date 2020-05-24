@@ -107,6 +107,70 @@ public class Teacher extends javax.swing.JFrame {
         }
     }
     
+    boolean validation()
+    {
+        boolean b = false;
+        
+        if(jTextField1.getText().trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "Plese Fill Name Field");
+            jTextField1.requestFocus();
+        }
+        else if(jTextField2.getText().trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "Plese Enter Higher Qualification");
+            jTextField2.requestFocus();
+        }
+        else if(jTextField3.getText().trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "Plese Fill The Salary Field");
+            jTextField3.requestFocus();
+        }
+        else if(jTextField4.getText().trim().length() != 10)
+        {
+            JOptionPane.showMessageDialog(null, "Plese Enter 10 Digit Contact Number");
+            jTextField4.requestFocus();
+        }
+        else if(jTextField5.getText().trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "Plese Fill The E-Mail Field");
+            jTextField5.requestFocus();
+        }
+        else if(jTextField6.getText().trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "Plese Enter Current Address");
+            jTextField6.requestFocus();
+        }
+        else
+        {
+            int k = 0;
+            try
+            {
+                Integer.parseInt(jTextField3.getText().trim());
+                
+                k = 1;
+                Integer.parseInt(jTextField4.getText().trim());
+                
+                b = true;
+                
+            }catch(Exception e)
+            {
+                if(k == 0)
+                {
+                    JOptionPane.showMessageDialog(null, "Plese Enter Salary In Digits");
+                    jTextField3.requestFocus();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Plese Enter Valid 10 Digit Contact Number");
+                    jTextField4.requestFocus();
+                }
+            }
+        }
+        
+        return b;
+    }
+    
     void clear()
     {
         jTextField1.setText("");
@@ -115,7 +179,9 @@ public class Teacher extends javax.swing.JFrame {
         jTextField4.setText("");
         jTextField5.setText("");
         jTextField6.setText("");
+        
         jTextField1.requestFocus();
+        jButton1.setEnabled(true);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -393,78 +459,84 @@ public class Teacher extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        dtm = (DefaultTableModel)jTable1.getModel();
-        int selectIndex = jTable1.getSelectedRow();
-        
-        String id = dtm.getValueAt(selectIndex, 1).toString();
-        
-        String sql = "update Teacher set Name=?, Qualification=?, Salary=?, Contact=?, Email=?, Address=? where id=?";
-        
-        try
+        if(validation())
         {
-            conn = javaConnect.connectDb();
-            pst = conn.prepareStatement(sql);
-            
-            pst.setString(1, jTextField1.getText());
-            pst.setString(2, jTextField2.getText());
-            pst.setString(3, jTextField3.getText());
-            pst.setString(4, jTextField4.getText());
-            pst.setString(5, jTextField5.getText());
-            pst.setString(6, jTextField6.getText());
-            pst.setString(7, id);
-            
-            pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Teacher Information Edit Successfuly");
-            
-            pst.close();
-            conn.close();
-            
-            showData();
-            jButton1.setEnabled(true);
-            
-        }catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(null, e);
+            dtm = (DefaultTableModel)jTable1.getModel();
+            int selectIndex = jTable1.getSelectedRow();
+
+            String id = dtm.getValueAt(selectIndex, 1).toString();
+
+            String sql = "update Teacher set Name=?, Qualification=?, Salary=?, Contact=?, Email=?, Address=? where id=?";
+
+            try
+            {
+                conn = javaConnect.connectDb();
+                pst = conn.prepareStatement(sql);
+
+                pst.setString(1, jTextField1.getText().trim());
+                pst.setString(2, jTextField2.getText().trim());
+                pst.setString(3, jTextField3.getText().trim());
+                pst.setString(4, jTextField4.getText().trim());
+                pst.setString(5, jTextField5.getText().trim());
+                pst.setString(6, jTextField6.getText().trim());
+                pst.setString(7, id);
+
+                pst.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Teacher Information Edit Successfuly");
+
+                pst.close();
+                conn.close();
+
+                showData();
+                clear();
+                jButton1.setEnabled(true);
+
+            }catch(Exception e)
+            {
+                JOptionPane.showMessageDialog(null, e);
+            }
         }
-        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String sql = "insert into Teacher(Id, Name, Qualification, Salary, Contact, Email, Address) values(?,?,?,?,?,?,?)";
-        
-        Random r = new Random();
-        String s = Integer.toString(r.nextInt(1000)+1);
-        
-        try
+        if(validation())
         {
-            conn = javaConnect.connectDb();
-            pst = conn.prepareStatement(sql);
-            pst.setString(1, s);
-            pst.setString(2, jTextField1.getText());
-            pst.setString(3, jTextField2.getText());
-            pst.setString(4, jTextField3.getText());
-            pst.setString(5, jTextField4.getText());
-            pst.setString(6, jTextField5.getText());
-            pst.setString(7, jTextField6.getText());
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "New Teacher Added");
-            
-            pst.close();
-            conn.close();
-            
-            showData();
-            
-        }catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(null, e);
+            String sql = "insert into Teacher(Id, Name, Qualification, Salary, Contact, Email, Address) values(?,?,?,?,?,?,?)";
+
+            Random r = new Random();
+            String s = Integer.toString(r.nextInt(1000)+1);
+
+            try
+            {
+                conn = javaConnect.connectDb();
+                pst = conn.prepareStatement(sql);
+                pst.setString(1, s);
+                pst.setString(2, jTextField1.getText().trim());
+                pst.setString(3, jTextField2.getText().trim());
+                pst.setString(4, jTextField3.getText().trim());
+                pst.setString(5, jTextField4.getText().trim());
+                pst.setString(6, jTextField5.getText().trim());
+                pst.setString(7, jTextField6.getText().trim());
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "New Teacher Added");
+
+                pst.close();
+                conn.close();
+
+                showData();
+                clear();
+
+            }catch(Exception e)
+            {
+                JOptionPane.showMessageDialog(null, e);
+            }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         clear();
-        jTextField1.requestFocus();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -494,7 +566,6 @@ public class Teacher extends javax.swing.JFrame {
             pst.close();
             conn.close();
             
-            jTextField1.requestFocus();
             clear();
             showData();
             jButton1.setEnabled(true);
@@ -507,7 +578,9 @@ public class Teacher extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
-        System.exit(0);
+        int i = JOptionPane.showConfirmDialog(null, "Are You Sure??? You Want To Exit !!!", "School Management System", JOptionPane.YES_NO_OPTION);
+        if(i == 0)
+            System.exit(0);
     }//GEN-LAST:event_jButton6ActionPerformed
 
     /**

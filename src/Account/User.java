@@ -102,25 +102,49 @@ public class User extends javax.swing.JFrame {
         }
     }
     
-    public int validation()
+    public boolean validation()
     {
-        int s=0;
-        if(jTextField1.getText().isEmpty())
+        boolean b = false;
+        
+        if(jTextField1.getText().trim().isEmpty())
+        {
             JOptionPane.showMessageDialog(null, "Plese Enter Valid Username");
-        else if(jTextField2.getText().isEmpty())
-            JOptionPane.showMessageDialog(null, "Plese Enter Your Name");
-        else if(jPasswordField1.getText().isEmpty())
-            JOptionPane.showMessageDialog(null, "Plese Enter Password");
-        else if(jTextField3.getText().isEmpty())
-            JOptionPane.showMessageDialog(null, "Plese Enter Your Contact Number");
-        else if(jTextField4.getText().isEmpty())
-            JOptionPane.showMessageDialog(null, "Plese Enter Your Address");
+            jTextField1.requestFocus();
+        }
+        else if(jTextField2.getText().trim().length() <3)
+        {
+            JOptionPane.showMessageDialog(null, "Plese Enter Valid Name, Having Atleaast 3 Characters");
+            jTextField2.requestFocus();
+        }
+        else if(jPasswordField1.getText().trim().length() <4)
+        {
+            JOptionPane.showMessageDialog(null, "Plese Enter Valid Password, Having Atleast 4 Characters");
+            jPasswordField1.requestFocus();
+        }
+        else if(jTextField3.getText().trim().length() != 10)
+        {
+            JOptionPane.showMessageDialog(null, "Plese Enter 10 Digit Contact Number");
+            jTextField3.requestFocus();
+        }
+        else if(jTextField4.getText().trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "Plese Fill The Address Field");
+            jTextField4.requestFocus();
+        }
         else
         {
-            JOptionPane.showMessageDialog(null, "User Added Successfuly...");
-            s=1;
+            try
+            {
+                Long.parseLong(jTextField3.getText().trim());
+                b = true;
+            }catch(NumberFormatException e)
+            {
+                JOptionPane.showMessageDialog(null, "Plese Enter Valid 10 Digit Contact Number");
+                jTextField3.requestFocus();
+            }
         }
-        return s;
+        
+        return b;
     }
     
     public void clearText()
@@ -131,6 +155,9 @@ public class User extends javax.swing.JFrame {
         jComboBox1.setSelectedIndex(0);
         jTextField3.setText("");
         jTextField4.setText("");
+        
+        jTextField1.requestFocus();
+        Save_User.setEnabled(true);
         
     }
 
@@ -401,25 +428,28 @@ public class User extends javax.swing.JFrame {
 
     private void Save_UserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Save_UserActionPerformed
         // TODO add your handling code here:
-        if(validation()==1)
+        if(validation())
         {
             String sql = "insert into User(Username, Name, Password, User_Type, Contact_no, Address) values(?,?,?,?,?,?)";
             try
             {
                 conn = javaConnect.connectDb();
                 pst = conn.prepareStatement(sql);
-                pst.setString(1, jTextField1.getText());
-                pst.setString(2, jTextField2.getText());
-                pst.setString(3, jPasswordField1.getText());
+                pst.setString(1, jTextField1.getText().trim());
+                pst.setString(2, jTextField2.getText().trim());
+                pst.setString(3, jPasswordField1.getText().trim());
                 pst.setString(4, (String)jComboBox1.getSelectedItem().toString());
-                pst.setString(5, jTextField3.getText());
-                pst.setString(6, jTextField4.getText());
+                pst.setString(5, jTextField3.getText().trim());
+                pst.setString(6, jTextField4.getText().trim());
                 pst.execute();
+                
+                JOptionPane.showMessageDialog(null, "User Added Successfuly...");
                 
                 pst.close();
                 conn.close();
                 
                 showData();
+                clearText();
             }catch(Exception e)
             {
                 JOptionPane.showMessageDialog(null, e);
@@ -438,6 +468,8 @@ public class User extends javax.swing.JFrame {
         jTextField4.setText(dtm.getValueAt(selectIndex, 3).toString());
         jComboBox1.setSelectedItem(dtm.getValueAt(selectIndex, 5).toString());
         
+        jPasswordField1.setText("1234");
+        
         jTextField1.setEnabled(false);
         jPasswordField1.setEnabled(false);
         Save_User.setEnabled(false);
@@ -448,39 +480,40 @@ public class User extends javax.swing.JFrame {
 
     private void Edit_User_DataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Edit_User_DataActionPerformed
         // TODO add your handling code here:
-        dtm = (DefaultTableModel)jTable1.getModel();
-        int selectIndex = jTable1.getSelectedRow();
-        
-        String id = dtm.getValueAt(selectIndex, 4).toString();
-        
-        String sql = "update User set Name=?, User_Type=?, Contact_no=?, Address=? where Username='"+id+"'";
-        try
+        if(validation())
         {
-            conn = javaConnect.connectDb();
-            pst = conn.prepareStatement(sql);
-            jTextField2.requestFocus();
-            pst.setString(1, jTextField2.getText());                            // 1 -- Name
-            pst.setString(2, (String)jComboBox1.getSelectedItem().toString());  // 2 -- User_Type
-            pst.setString(3, jTextField3.getText());                            // 3 -- Contact_no
-            pst.setString(4, jTextField4.getText());                            // 4 -- Address
-            pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "User Edited");
-            
-            jTextField1.setEnabled(true);
-            jPasswordField1.setEnabled(true);
-            Save_User.setEnabled(true);
-            
-            pst.close();
-            conn.close();
-            
-            showData();
-            clearText();
-            jTextField1.requestFocus();
-        }catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(null, e);
+            dtm = (DefaultTableModel)jTable1.getModel();
+            int selectIndex = jTable1.getSelectedRow();
+
+            String id = dtm.getValueAt(selectIndex, 4).toString();
+
+            String sql = "update User set Name=?, User_Type=?, Contact_no=?, Address=? where Username='"+id+"'";
+            try
+            {
+                conn = javaConnect.connectDb();
+                pst = conn.prepareStatement(sql);
+                jTextField2.requestFocus();
+                pst.setString(1, jTextField2.getText().trim());                            // 1 -- Name
+                pst.setString(2, (String)jComboBox1.getSelectedItem().toString());  // 2 -- User_Type
+                pst.setString(3, jTextField3.getText().trim());                            // 3 -- Contact_no
+                pst.setString(4, jTextField4.getText().trim());                            // 4 -- Address
+                pst.executeUpdate();
+                JOptionPane.showMessageDialog(null, "User Edited");
+
+                jTextField1.setEnabled(true);
+                jPasswordField1.setEnabled(true);
+                Save_User.setEnabled(true);
+
+                pst.close();
+                conn.close();
+
+                showData();
+                clearText();
+            }catch(Exception e)
+            {
+                JOptionPane.showMessageDialog(null, e);
+            }
         }
-        
         
     }//GEN-LAST:event_Edit_User_DataActionPerformed
 
@@ -490,12 +523,13 @@ public class User extends javax.swing.JFrame {
         jPasswordField1.setEnabled(true);
         Save_User.setEnabled(true);
         clearText();
-        jTextField1.requestFocus();
     }//GEN-LAST:event_Clear_DataActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        System.exit(0);
+        int i = JOptionPane.showConfirmDialog(null, "Are You Sure??? You Want To Exit !!!", "School Management System", JOptionPane.YES_NO_OPTION);
+        if(i == 0)
+            System.exit(0);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void Delete_DataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Delete_DataActionPerformed
@@ -523,7 +557,6 @@ public class User extends javax.swing.JFrame {
             
             showData();
             clearText();
-            jTextField1.requestFocus();
         }catch(Exception e)
         {
             JOptionPane.showMessageDialog(null, e);

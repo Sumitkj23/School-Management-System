@@ -17,8 +17,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -93,7 +91,6 @@ public class Exam extends javax.swing.JFrame {
     public void showData()
     {
         String sql = "select * from Exam";
-        dtm = (DefaultTableModel)jTable1.getModel();
         try
         {
             conn = javaConnect.connectDb();
@@ -154,6 +151,25 @@ public class Exam extends javax.swing.JFrame {
         }
     }
     
+    boolean validation()
+    {
+        boolean b = false;
+        
+        Date date =  jDateChooser1.getDate();
+        
+        if(jTextField1.getText().trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "Plese Enter Exam Name");
+            jTextField1.requestFocus();
+        }
+        else if(date == null)
+            JOptionPane.showMessageDialog(null, "Plese Select Exam Date");
+        else
+            b = true;
+        
+        return b;
+    }
+    
     void clear()
     {
         jTextField1.setText("");
@@ -164,6 +180,7 @@ public class Exam extends javax.swing.JFrame {
         jComboBox4.setSelectedIndex(0);
         
         jTextField1.requestFocus();
+        jButton1.setEnabled(true);
     }
     
 
@@ -395,31 +412,34 @@ public class Exam extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String sql = "insert into Exam(Exam_Name, Shift, Date, Class, Section, Subject) values(?,?,?,?,?,?)";
-        SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
-        String date = df1.format(jDateChooser1.getDate());
-        try
+        if(validation())
         {
-            conn = javaConnect.connectDb();
-            pst = conn.prepareStatement(sql);
-            pst.setString(1, jTextField1.getText());
-            pst.setString(2, jComboBox1.getSelectedItem().toString());
-            pst.setString(3, date);
-            pst.setString(4, jComboBox2.getSelectedItem().toString());
-            pst.setString(5, jComboBox3.getSelectedItem().toString());
-            pst.setString(6, jComboBox4.getSelectedItem().toString());
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Exam Added Successfuly");
-            
-            pst.close();
-            conn.close();
-            
-            showData();
-            clear();
-            
-        }catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(null, e);
+            String sql = "insert into Exam(Exam_Name, Shift, Date, Class, Section, Subject) values(?,?,?,?,?,?)";
+            SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
+            String date = df1.format(jDateChooser1.getDate());
+            try
+            {
+                conn = javaConnect.connectDb();
+                pst = conn.prepareStatement(sql);
+                pst.setString(1, jTextField1.getText().trim());
+                pst.setString(2, jComboBox1.getSelectedItem().toString());
+                pst.setString(3, date);
+                pst.setString(4, jComboBox2.getSelectedItem().toString());
+                pst.setString(5, jComboBox3.getSelectedItem().toString());
+                pst.setString(6, jComboBox4.getSelectedItem().toString());
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "Exam Added Successfuly");
+
+                pst.close();
+                conn.close();
+
+                showData();
+                clear();
+
+            }catch(Exception e)
+            {
+                JOptionPane.showMessageDialog(null, e);
+            }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -443,12 +463,10 @@ public class Exam extends javax.swing.JFrame {
             pst.execute();
             JOptionPane.showMessageDialog(null, "Exam Info Deleted Successfuly");
 
-            jButton1.setEnabled(true);
-            jTextField1.requestFocus();
-
             pst.close();
             conn.close();
             
+            jTextField1.requestFocus();
             showData();
             clear();
         }catch(Exception e)
@@ -476,7 +494,7 @@ public class Exam extends javax.swing.JFrame {
             
             jButton1.setEnabled(false);
         } catch (ParseException ex) {
-            Logger.getLogger(Exam.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex);
         }
         
     }//GEN-LAST:event_jTable1MouseClicked
