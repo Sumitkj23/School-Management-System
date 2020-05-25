@@ -34,7 +34,8 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         super("Login...");
         initComponents();
-        jTextField1.requestFocus();
+        
+        jTextField1.requestFocus();           // cursor stays on Username field
         jButton2.setBackground(Color.GRAY);
         jButton3.setBackground(Color.ORANGE);
     }
@@ -185,6 +186,7 @@ public class Login extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+            // Exit Button code
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         int i = JOptionPane.showConfirmDialog(null, "Are You Sure??? You Want To Exit..","School Management System", JOptionPane.YES_NO_OPTION);
@@ -192,41 +194,47 @@ public class Login extends javax.swing.JFrame {
             System.exit(0);
     }//GEN-LAST:event_jButton3ActionPerformed
 
+            // submit button code
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        
-        if(jTextField1.getText().isEmpty() || jPasswordField1.getText().isEmpty())
+                
+                    // validate Username And Password are entered or not
+        if(jTextField1.getText().trim().isEmpty() || jPasswordField1.getText().trim().isEmpty())
             JOptionPane.showMessageDialog(null, "Plese Enter Username And Password");
         else
         {
-        
-            String sql="select * from User where Username=? and Password=? and User_Type=?";
-            String u_type = (String)jComboBox1.getSelectedItem().toString();
+            String u_type = (String)jComboBox1.getSelectedItem().toString();    // store usertype
+            
+                    // query for check user exist or not in 'User' table
+            String sql="select * from User where Username=? and Password=? and User_Type=?";     
             try
             {
                 conn = javaConnect.connectDb();
                 pst = conn.prepareStatement(sql);
                 pst.setString(1, jTextField1.getText());
                 pst.setString(2, jPasswordField1.getText());
-                pst.setString(3, u_type);
+                pst.setString(3, u_type);    // check usertype
                 rs = pst.executeQuery();
-                if(rs.next())
+                if(rs.next())       // return true, if Username, Password and Usertype are match from 'User' table
                 {
                     setVisible(false);
                     
-                    if("Admin".equals(u_type))
-                        new Admin_Home(jTextField1.getText(),u_type).setVisible(true);
-                    else
-                        new Teacher_Home(jTextField1.getText(),u_type).setVisible(true);
+                    if("Admin".equals(u_type))  // check if user type 'Admin'
+                        new Admin_Home(jTextField1.getText(),u_type).setVisible(true);      // pass username and usertype
+                    else                        // if user type 'Teacher'
+                        new Teacher_Home(jTextField1.getText(),u_type).setVisible(true);     // pass username and usertype
                     
                 }
-                else
+                else        // if Username, Password and Usertype didn't match from 'User'
                 {
                     JOptionPane.showMessageDialog(null, "Plese Enter Correct Username, Password And UserType");
+                    
+                        // clear all entered text
                     jTextField1.setText("");
                     jPasswordField1.setText("");
                     jComboBox1.setSelectedIndex(0);
-                    jTextField1.requestFocus();
+                    
+                    jTextField1.requestFocus();     // focus on Username field
                 }
 
             }catch(Exception e)

@@ -25,52 +25,58 @@ public class User extends javax.swing.JFrame {
     Connection conn;
     PreparedStatement pst;
     ResultSet rs;
-    DefaultTableModel dtm;
+    DefaultTableModel dtm;      // for holds jTable1
     
     String uname,utype;
     
     public User() {
         
     }
-
+    
+            // receive username and usertype
     public User(String uname, String utype) {
         super("Add New User...");
-        this.uname = uname;
-        this.utype = utype;
+        
+        this.uname = uname;         // stores username
+        this.utype = utype;         // stores usertype
+        
         initComponents();
-        showData();
+        
+        showData();            // all previous stored data display on jTablel
     }
     
+        // method for fetching all the data from 'User' table and put into jTable1
     public void showData()
     {
-        String sql = "select * from User";
+        String sql = "select * from User";       // query for select all data from the 'User' table
         try
         {
             conn = javaConnect.connectDb();
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
             
-            dtm = (DefaultTableModel)jTable1.getModel();
-            dtm.setRowCount(0);
+            dtm = (DefaultTableModel)jTable1.getModel();        // holds jTable1 reference
+            dtm.setRowCount(0);             // remove all the previous row from the jTable1
             
-            int s=1;
+            int s=1;        // stores S.No.
             
             while(rs.next())
             {
-                Vector v = new Vector();
+                Vector v = new Vector();        // for hold the data row by row
 
-                v.add(s);
+                v.add(s);       // add S.No.
                 v.add(rs.getString("Name"));
                 v.add(rs.getString("Contact_no"));
                 v.add(rs.getString("Address"));
                 v.add(rs.getString("Username"));
                 v.add(rs.getString("User_Type"));
 
-                dtm.addRow(v);
-                s++;
+                dtm.addRow(v);          // add row in jTable1
+                s++;           // after adding the new row in jTable1, S.No. should be update by 1 for next row
             }
             
-            /*
+            /*       another way for display the data into jTable1
+            
             ResultSetMetaData rsd = rs.getMetaData();
             int c = rsd.getColumnCount();
             
@@ -102,42 +108,43 @@ public class User extends javax.swing.JFrame {
         }
     }
     
+        // validate to all input fields
     public boolean validation()
     {
         boolean b = false;
         
-        if(jTextField1.getText().trim().isEmpty())
+        if(jTextField1.getText().trim().length() <2)      // check valid 'Username' will be entered or not
         {
             JOptionPane.showMessageDialog(null, "Plese Enter Valid Username");
-            jTextField1.requestFocus();
+            jTextField1.requestFocus();                  // cursor focus on 'Name' field
         }
-        else if(jTextField2.getText().trim().length() <3)
+        else if(jTextField2.getText().trim().length() <3)      // check valid 'Name' will be entered or not
         {
             JOptionPane.showMessageDialog(null, "Plese Enter Valid Name, Having Atleaast 3 Characters");
             jTextField2.requestFocus();
         }
-        else if(jPasswordField1.getText().trim().length() <4)
+        else if(jPasswordField1.getText().trim().length() <4)      // check valid 'Password' will be entered or not
         {
             JOptionPane.showMessageDialog(null, "Plese Enter Valid Password, Having Atleast 4 Characters");
             jPasswordField1.requestFocus();
         }
-        else if(jTextField3.getText().trim().length() != 10)
+        else if(jTextField3.getText().trim().length() != 10)    // check entered Contact No. length equal to 10 or not
         {
             JOptionPane.showMessageDialog(null, "Plese Enter 10 Digit Contact Number");
             jTextField3.requestFocus();
         }
-        else if(jTextField4.getText().trim().isEmpty())
+        else if(jTextField4.getText().trim().isEmpty())      // check 'Address' field empty or not
         {
             JOptionPane.showMessageDialog(null, "Plese Fill The Address Field");
             jTextField4.requestFocus();
         }
         else
         {
-            try
+            try       // check 'Contact no.', in digits or not
             {
                 Long.parseLong(jTextField3.getText().trim());
                 b = true;
-            }catch(NumberFormatException e)
+            }catch(NumberFormatException e)     // if not then exception occur
             {
                 JOptionPane.showMessageDialog(null, "Plese Enter Valid 10 Digit Contact Number");
                 jTextField3.requestFocus();
@@ -147,7 +154,8 @@ public class User extends javax.swing.JFrame {
         return b;
     }
     
-    public void clearText()
+        // clear entered input data
+    public void clearText()        
     {
         jTextField1.setText("");
         jTextField2.setText("");
@@ -156,9 +164,8 @@ public class User extends javax.swing.JFrame {
         jTextField3.setText("");
         jTextField4.setText("");
         
-        jTextField1.requestFocus();
-        Save_User.setEnabled(true);
-        
+        jTextField1.requestFocus();       // cursor focus on 'Name' field
+        Save_User.setEnabled(true);       // set 'Save' button enable
     }
 
     /**
@@ -426,9 +433,10 @@ public class User extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+                // Save button code
     private void Save_UserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Save_UserActionPerformed
         // TODO add your handling code here:
-        if(validation())
+        if(validation())        // check validation
         {
             String sql = "insert into User(Username, Name, Password, User_Type, Contact_no, Address) values(?,?,?,?,?,?)";
             try
@@ -448,8 +456,9 @@ public class User extends javax.swing.JFrame {
                 pst.close();
                 conn.close();
                 
-                showData();
-                clearText();
+                showData();     // fetch all the data from 'User' table and show all in jTable1
+                clearText();    // clear all input field
+                
             }catch(Exception e)
             {
                 JOptionPane.showMessageDialog(null, e);
@@ -457,58 +466,60 @@ public class User extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_Save_UserActionPerformed
 
+                // when clicks on any row of jTable1
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-        dtm = (DefaultTableModel)jTable1.getModel();
-        int selectIndex = jTable1.getSelectedRow();
+        dtm = (DefaultTableModel)jTable1.getModel();        // holds reference of jTable1
+        int selectIndex = jTable1.getSelectedRow();         // store index number of selected row
         
+                // set data into input fields from corresponding jTable1's column data
         jTextField1.setText(dtm.getValueAt(selectIndex, 4).toString());
         jTextField2.setText(dtm.getValueAt(selectIndex, 1).toString());
         jTextField3.setText(dtm.getValueAt(selectIndex, 2).toString());
         jTextField4.setText(dtm.getValueAt(selectIndex, 3).toString());
         jComboBox1.setSelectedItem(dtm.getValueAt(selectIndex, 5).toString());
         
-        jPasswordField1.setText("1234");
+        jPasswordField1.setText("1234");   // set bydefault password field, which are only use for validation in edit action
         
-        jTextField1.setEnabled(false);
-        jPasswordField1.setEnabled(false);
-        Save_User.setEnabled(false);
+        jTextField1.setEnabled(false);          // set 'Username' field disable
+        jPasswordField1.setEnabled(false);      // set 'Password' field disable
+        Save_User.setEnabled(false);            // set 'save' button disable
         
-        jTextField2.requestFocus();
+        jTextField2.requestFocus();             // cursor focus on 'Name' field
         
     }//GEN-LAST:event_jTable1MouseClicked
 
+                    // Edit button code
     private void Edit_User_DataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Edit_User_DataActionPerformed
         // TODO add your handling code here:
-        if(validation())
+        if(validation())        // check validation
         {
-            dtm = (DefaultTableModel)jTable1.getModel();
-            int selectIndex = jTable1.getSelectedRow();
+            dtm = (DefaultTableModel)jTable1.getModel();        // holds reference of jTable1
+            int selectIndex = jTable1.getSelectedRow();         // store index number of selected row
 
-            String id = dtm.getValueAt(selectIndex, 4).toString();
+            String id = dtm.getValueAt(selectIndex, 4).toString();  // stores 'Id' (primary key of 'User' table) from jTable1
 
             String sql = "update User set Name=?, User_Type=?, Contact_no=?, Address=? where Username='"+id+"'";
             try
             {
                 conn = javaConnect.connectDb();
                 pst = conn.prepareStatement(sql);
-                jTextField2.requestFocus();
                 pst.setString(1, jTextField2.getText().trim());                            // 1 -- Name
-                pst.setString(2, (String)jComboBox1.getSelectedItem().toString());  // 2 -- User_Type
+                pst.setString(2, (String)jComboBox1.getSelectedItem().toString());         // 2 -- User_Type
                 pst.setString(3, jTextField3.getText().trim());                            // 3 -- Contact_no
                 pst.setString(4, jTextField4.getText().trim());                            // 4 -- Address
                 pst.executeUpdate();
                 JOptionPane.showMessageDialog(null, "User Edited");
 
-                jTextField1.setEnabled(true);
-                jPasswordField1.setEnabled(true);
-                Save_User.setEnabled(true);
+                jTextField1.setEnabled(true);       // set Username field enable
+                jPasswordField1.setEnabled(true);   // set Password field enable
 
                 pst.close();
                 conn.close();
 
-                showData();
-                clearText();
+                showData();     // fetch all the data from 'Teacher' table and show all in jTable1
+                clearText();    // clear all input field
+                
             }catch(Exception e)
             {
                 JOptionPane.showMessageDialog(null, e);
@@ -517,14 +528,16 @@ public class User extends javax.swing.JFrame {
         
     }//GEN-LAST:event_Edit_User_DataActionPerformed
 
+            // clear button code 
     private void Clear_DataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Clear_DataActionPerformed
         // TODO add your handling code here:
-        jTextField1.setEnabled(true);
-        jPasswordField1.setEnabled(true);
-        Save_User.setEnabled(true);
-        clearText();
+        jTextField1.setEnabled(true);       // set Username field enable
+        jPasswordField1.setEnabled(true);   // set Password field enable
+
+        clearText();        // clear all input fields
     }//GEN-LAST:event_Clear_DataActionPerformed
 
+            //Exit button code
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
         int i = JOptionPane.showConfirmDialog(null, "Are You Sure??? You Want To Exit !!!", "School Management System", JOptionPane.YES_NO_OPTION);
@@ -532,15 +545,17 @@ public class User extends javax.swing.JFrame {
             System.exit(0);
     }//GEN-LAST:event_jButton5ActionPerformed
 
+                // Delete button code
     private void Delete_DataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Delete_DataActionPerformed
         // TODO add your handling code here:
         
-        dtm = (DefaultTableModel)jTable1.getModel();
-        int selectIndex = jTable1.getSelectedRow();
-        
+        dtm = (DefaultTableModel)jTable1.getModel();        // holds reference of jTable1
+        int selectIndex = jTable1.getSelectedRow();         // store index number of selected row
+
+                // store Username (primary key of 'User' table) from selected jTable1's row 
         String id = dtm.getValueAt(selectIndex, 4).toString();
         
-        String sql = "delete from User where Username='"+id+"'";
+        String sql = "delete from User where Username='"+id+"'";        // deletion query
         try
         {
             conn = javaConnect.connectDb();
@@ -550,20 +565,20 @@ public class User extends javax.swing.JFrame {
             
             jTextField1.setEnabled(true);
             jPasswordField1.setEnabled(true);
-            Save_User.setEnabled(true);
             
             pst.close();
             conn.close();
             
-            showData();
-            clearText();
+            showData();     // fetch all the data from 'Subject' table and show all in jTable1  
+            clearText();    // clear input field
+            
         }catch(Exception e)
         {
             JOptionPane.showMessageDialog(null, e);
-        }
-        
+        }        
     }//GEN-LAST:event_Delete_DataActionPerformed
 
+                // Back button code
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
         // TODO add your handling code here:
         setVisible(false);

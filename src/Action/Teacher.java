@@ -24,7 +24,7 @@ public class Teacher extends javax.swing.JFrame {
     Connection conn;
     PreparedStatement pst;
     ResultSet rs,rs1=null;
-    DefaultTableModel dtm;
+    DefaultTableModel dtm;      // for holds jTable1
     
     String uname,utype;
     /**
@@ -34,48 +34,52 @@ public class Teacher extends javax.swing.JFrame {
         
     }
 
+            // receive username and usertype
     Teacher(String uname, String utype) {
         super("Teacher Registration...");
-        this.uname = uname;
-        this.utype = utype;
+        
+        this.uname = uname;         // stores username
+        this.utype = utype;         // stores usertype
+        
         initComponents();
-        showData();
+        
+        showData();            // all previous stored data display on jTablel
     }
     
-    
+        // method for fetching all the data from 'Teacher' table and put into jTable1
     public void showData()
     {
-        String sql = "select * from Teacher";
-        dtm = (DefaultTableModel)jTable1.getModel();
+        String sql = "select * from Teacher";       // query for select all data from the 'Teacher' table
         try
         {
             conn = javaConnect.connectDb();
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
             
-            dtm = (DefaultTableModel)jTable1.getModel();
-            dtm.setRowCount(0);
+            dtm = (DefaultTableModel)jTable1.getModel();        // holds jTable1 reference
+            dtm.setRowCount(0);                                 // remove all the previous row from the jTable1
             
-            int s=1;
+            int s=1;        // stores S.No.
             
             while(rs.next())
             {
-                Vector v = new Vector();
+                Vector v = new Vector();        // for hold the data row by row
                 
-                v.add(s);
+                v.add(s);              // add S.No.
                 v.add(rs.getString("Id"));
-                v.add(rs.getString("Name"));    // pass database column name
-                v.add(rs.getString("Qualification"));  // pass database column name
-                v.add(rs.getString("Salary"));    // pass database column name
-                v.add(rs.getString("Contact"));    // pass database column name
-                v.add(rs.getString("Email"));  // pass database column name
-                v.add(rs.getString("Address"));  // pass database column name
+                v.add(rs.getString("Name"));                // pass database column name
+                v.add(rs.getString("Qualification"));       // pass database column name
+                v.add(rs.getString("Salary"));              // pass database column name
+                v.add(rs.getString("Contact"));             // pass database column name
+                v.add(rs.getString("Email"));               // pass database column name
+                v.add(rs.getString("Address"));             // pass database column name
 
-                dtm.addRow(v);
-                s++;
+                dtm.addRow(v);          // add row in jTable1
+                s++;           // after adding the new row in jTable1, S.No. should be update by 1 for next row
             }
             
-            /*
+            /*       another way for display the data into jTable1
+            
             ResultSetMetaData rsd = rs.getMetaData();
             int c = rsd.getColumnCount();
             
@@ -107,36 +111,37 @@ public class Teacher extends javax.swing.JFrame {
         }
     }
     
+        // validate to all input fields
     boolean validation()
     {
         boolean b = false;
         
-        if(jTextField1.getText().trim().isEmpty())
+        if(jTextField1.getText().trim().isEmpty())            // check valid 'Name' will be entered or not
         {
             JOptionPane.showMessageDialog(null, "Plese Fill Name Field");
-            jTextField1.requestFocus();
+            jTextField1.requestFocus();            // cursor focus on 'Name' field
         }
-        else if(jTextField2.getText().trim().isEmpty())
+        else if(jTextField2.getText().trim().isEmpty())      // check 'Qualification' field empty or not
         {
             JOptionPane.showMessageDialog(null, "Plese Enter Higher Qualification");
             jTextField2.requestFocus();
         }
-        else if(jTextField3.getText().trim().isEmpty())
+        else if(jTextField3.getText().trim().isEmpty())      // check 'Salary' field empty or not
         {
             JOptionPane.showMessageDialog(null, "Plese Fill The Salary Field");
             jTextField3.requestFocus();
         }
-        else if(jTextField4.getText().trim().length() != 10)
+        else if(jTextField4.getText().trim().length() != 10)    // check entered Contact No. length equal to 10 or not
         {
             JOptionPane.showMessageDialog(null, "Plese Enter 10 Digit Contact Number");
             jTextField4.requestFocus();
         }
-        else if(jTextField5.getText().trim().isEmpty())
+        else if(jTextField5.getText().trim().isEmpty())      // check 'E-Mail' field empty or not
         {
             JOptionPane.showMessageDialog(null, "Plese Fill The E-Mail Field");
             jTextField5.requestFocus();
         }
-        else if(jTextField6.getText().trim().isEmpty())
+        else if(jTextField6.getText().trim().isEmpty())      // check 'Address' field empty or not
         {
             JOptionPane.showMessageDialog(null, "Plese Enter Current Address");
             jTextField6.requestFocus();
@@ -144,16 +149,16 @@ public class Teacher extends javax.swing.JFrame {
         else
         {
             int k = 0;
-            try
+            try       // check 'Salary' and 'Contact no.', in digits or not
             {
-                Integer.parseInt(jTextField3.getText().trim());
+                Integer.parseInt(jTextField3.getText().trim());       // try to convert 'Salary' into digits...
                 
                 k = 1;
-                Integer.parseInt(jTextField4.getText().trim());
+                Integer.parseInt(jTextField4.getText().trim());      // try to convert 'contact no' into digits...
                 
                 b = true;
                 
-            }catch(Exception e)
+            }catch(Exception e)     // what caused the exception occur, it will be known from the value of k
             {
                 if(k == 0)
                 {
@@ -171,7 +176,7 @@ public class Teacher extends javax.swing.JFrame {
         return b;
     }
     
-    void clear()
+    void clear()        // clear entered input data
     {
         jTextField1.setText("");
         jTextField2.setText("");
@@ -180,8 +185,8 @@ public class Teacher extends javax.swing.JFrame {
         jTextField5.setText("");
         jTextField6.setText("");
         
-        jTextField1.requestFocus();
-        jButton1.setEnabled(true);
+        jTextField1.requestFocus();       // focus on 'Name' field
+        jButton1.setEnabled(true);        // set 'Save' button enable
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -437,14 +442,14 @@ public class Teacher extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+                // when clicks on any row of jTable1
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         
         // TODO add your handling code here:
-        dtm = (DefaultTableModel)jTable1.getModel();
-        int selectIndex = jTable1.getSelectedRow();
+        dtm = (DefaultTableModel)jTable1.getModel();        // holds reference of jTable1
+        int selectIndex = jTable1.getSelectedRow();         // store index number of selected row
 
-        //String id = dtm.getValueAt(selectIndex, 1).toString();
-
+                // set data into input fields from corresponding jTable1's column data
         jTextField1.setText(dtm.getValueAt(selectIndex, 2).toString());
         jTextField2.setText(dtm.getValueAt(selectIndex, 3).toString());
         jTextField3.setText(dtm.getValueAt(selectIndex, 4).toString());
@@ -452,19 +457,20 @@ public class Teacher extends javax.swing.JFrame {
         jTextField5.setText(dtm.getValueAt(selectIndex, 6).toString());
         jTextField6.setText(dtm.getValueAt(selectIndex, 7).toString());
 
-        jButton1.setEnabled(false);
-        jTextField1.requestFocus();
+        jButton1.setEnabled(false);       // set 'Save' button disable
+        jTextField1.requestFocus();       // focus on 'Name' field
 
     }//GEN-LAST:event_jTable1MouseClicked
-
+    
+                    // Edit button code
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        if(validation())
+        if(validation())        // check validation
         {
-            dtm = (DefaultTableModel)jTable1.getModel();
-            int selectIndex = jTable1.getSelectedRow();
+            dtm = (DefaultTableModel)jTable1.getModel();        // holds reference of jTable1
+            int selectIndex = jTable1.getSelectedRow();         // store index number of selected row
 
-            String id = dtm.getValueAt(selectIndex, 1).toString();
+            String id = dtm.getValueAt(selectIndex, 1).toString(); // stores 'Id' (primary key of 'Teacher' table) from jTable1
 
             String sql = "update Teacher set Name=?, Qualification=?, Salary=?, Contact=?, Email=?, Address=? where id=?";
 
@@ -487,9 +493,8 @@ public class Teacher extends javax.swing.JFrame {
                 pst.close();
                 conn.close();
 
-                showData();
-                clear();
-                jButton1.setEnabled(true);
+                showData();     // fetch all the data from 'Teacher' table and show all in jTable1
+                clear();        // clear all input field
 
             }catch(Exception e)
             {
@@ -498,14 +503,15 @@ public class Teacher extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+                // Save button code
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        if(validation())
+        if(validation())        // check validation
         {
             String sql = "insert into Teacher(Id, Name, Qualification, Salary, Contact, Email, Address) values(?,?,?,?,?,?,?)";
 
-            Random r = new Random();
-            String s = Integer.toString(r.nextInt(1000)+1);
+            Random r = new Random();                             // random number 'for Student Id'
+            String s = Integer.toString(r.nextInt(1000)+1);      // stores generated random number 
 
             try
             {
@@ -524,8 +530,8 @@ public class Teacher extends javax.swing.JFrame {
                 pst.close();
                 conn.close();
 
-                showData();
-                clear();
+                showData();     // fetch all the data from 'Teacher' table and show all in jTable1
+                clear();        // clear all input field
 
             }catch(Exception e)
             {
@@ -534,26 +540,30 @@ public class Teacher extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+                // Clear button code
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         clear();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+                // Back button code
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
         setVisible(false);
         new Admin_Home(uname,utype).setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
 
+                // Delete button code
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         
-        dtm = (DefaultTableModel)jTable1.getModel();
-        int selectIndex = jTable1.getSelectedRow();
-        
+        dtm = (DefaultTableModel)jTable1.getModel();        // holds reference of jTable1
+        int selectIndex = jTable1.getSelectedRow();         // store index number of selected row
+
+                // store id  (primary key of 'Teacher' table) from selected jTable1's row    
         String id = dtm.getValueAt(selectIndex, 1).toString();
         
-        String sql = "delete from Teacher where Id=?";
+        String sql = "delete from Teacher where Id=?";        // deletion query
         
         try
         {
@@ -566,16 +576,15 @@ public class Teacher extends javax.swing.JFrame {
             pst.close();
             conn.close();
             
-            clear();
-            showData();
-            jButton1.setEnabled(true);
+            showData();     // fetch all the data from 'Teacher' table and show all in jTable1  
+            clear();        // clear input field
             
         }catch(Exception e)
         {
             JOptionPane.showMessageDialog(null, e);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
-
+                // Exit button code
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
         int i = JOptionPane.showConfirmDialog(null, "Are You Sure??? You Want To Exit !!!", "School Management System", JOptionPane.YES_NO_OPTION);

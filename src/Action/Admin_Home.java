@@ -23,17 +23,20 @@ public class Admin_Home extends javax.swing.JFrame {
      * Creates new form Home
      */
     public Admin_Home() {
-        initComponents();
+        
     }
 
+            // receive username and usertype
     public Admin_Home(String u_name, String u_type) {
         super("Admin Home Page");
         
-        this.uname = u_name;
-        this.utype = u_type;
+        this.uname = u_name;    // stores username 
+        this.utype = u_type;    // stores usertype
+        
         initComponents();
-        jLabel3.setText(uname);
-        jLabel4.setText(utype);
+        
+        jLabel3.setText(uname);     // set username
+        jLabel4.setText(utype);     // set usertype
     }
 
     /**
@@ -267,13 +270,15 @@ public class Admin_Home extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+                // Logout button code
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         setVisible(false);
         Login ob = new Login();
         ob.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
-
+    
+                // Exit button code
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
         int i = JOptionPane.showConfirmDialog(null, "Are You Sure??? You Want To Exit !!!", "School Management System", JOptionPane.YES_NO_OPTION);
@@ -281,6 +286,8 @@ public class Admin_Home extends javax.swing.JFrame {
             System.exit(0);
     }//GEN-LAST:event_jButton5ActionPerformed
 
+            // call the class, according to by clicking the button and also pass username and usertype into constructor
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         setVisible(false);

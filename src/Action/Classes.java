@@ -19,7 +19,7 @@ public class Classes extends javax.swing.JFrame {
     
     Connection conn;
     PreparedStatement pst;
-    DefaultTableModel dtm;
+    DefaultTableModel dtm;      // for holds jTable1
     ResultSet rs;
 
     String uname,utype;
@@ -31,16 +31,20 @@ public class Classes extends javax.swing.JFrame {
         
     }
 
+            // receive username and usertype
     Classes(String uname, String utype) {
         
         super("Class");
-        this.uname = uname;
-        this.utype = utype;
+        
+        this.uname = uname;     // stores username
+        this.utype = utype;     // stores usertype
+        
         initComponents();
-        showData();
+        
+        showData();     // all previous stored data display on jTablel
     }
     
-    public void showData()
+    public void showData()      // fetch all data from 'Class' table and put on jTable1
     {
         String sql = "select * from Class";
         try
@@ -49,24 +53,25 @@ public class Classes extends javax.swing.JFrame {
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
             
-            dtm = (DefaultTableModel)jTable1.getModel();
-            dtm.setRowCount(0);
+            dtm = (DefaultTableModel)jTable1.getModel();    // take jTable1 reference
+            dtm.setRowCount(0);                             //  all the previos jTable1's data are vanish out
             
-            int s=1;
+            int s=1;        // for storing S.No
             
             while(rs.next())
             {
-                Vector v = new Vector();
+                Vector v = new Vector();    // for hold the data row by row
                 
-                v.add(s);
+                v.add(s);      // add S.No.
                 v.add(rs.getString("Name"));
                 v.add(rs.getString("Section"));
                 
-                dtm.addRow(v);
-                s++;
+                dtm.addRow(v);      // add row into jTable1 or display row in jTable1
+                s++;        // after adding the new row in jTable1, S.No. should be update by 1 for next row
             }
             
-            /*
+            /*       another way for display the data into jTable1
+            
             ResultSetMetaData rsd = rs.getMetaData();
             int c = rsd.getColumnCount();
             
@@ -98,7 +103,7 @@ public class Classes extends javax.swing.JFrame {
         }
     }
     
-    void clear()
+    void clear()        // clear selected input data
     {
         jComboBox1.setSelectedIndex(0);
         jComboBox2.setSelectedIndex(0);
@@ -267,15 +272,16 @@ public class Classes extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+                // save button code
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String sql = "insert into Class(Name, Section) values(?,?)";
+        String sql = "insert into Class(Name, Section) values(?,?)";    // query for insert into 'Class' table
         try
         {
             conn = javaConnect.connectDb();
             pst = conn.prepareStatement(sql);
             
-            pst.setString(1, jComboBox1.getSelectedItem().toString());
+            pst.setString(1, jComboBox1.getSelectedItem().toString());      // take data from jComboBox
             pst.setString(2, jComboBox2.getSelectedItem().toString());
             pst.execute();
             
@@ -284,8 +290,8 @@ public class Classes extends javax.swing.JFrame {
             pst.close();
             conn.close();
             
-            showData();
-            clear();
+            showData();     // fetch all the data from 'Class' table and show all in jTable1  
+            clear();        // clear selected input
             
         }catch(Exception e)
         {
@@ -293,37 +299,42 @@ public class Classes extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+                    // Back button code
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         setVisible(false);
-        if(utype.equals("Admin"))
+        if(utype.equals("Admin"))       // check usertype
             new Admin_Home(uname,utype).setVisible(true);
         else
             new Teacher_Home(uname,utype).setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
+                // when clicks on any row of jTable1
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-        dtm = (DefaultTableModel)jTable1.getModel();
+        dtm = (DefaultTableModel)jTable1.getModel();        // holds reference of jTable1
         
-        int selectIndex = jTable1.getSelectedRow();
+        int selectIndex = jTable1.getSelectedRow();         // store index number of selected row
         
-        jComboBox1.setSelectedItem(dtm.getValueAt(selectIndex, 1).toString());
+                // set data into jComboBox from corresponding jTable1's column data
+        jComboBox1.setSelectedItem(dtm.getValueAt(selectIndex, 1).toString());      
         jComboBox2.setSelectedItem(dtm.getValueAt(selectIndex, 2).toString());
         
-        jButton1.setEnabled(false);
+        jButton1.setEnabled(false);     // set 'Save' button disable
     }//GEN-LAST:event_jTable1MouseClicked
-
+        
+                // Delete button code
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         
-        dtm = (DefaultTableModel)jTable1.getModel();
-        int selectIndex = jTable1.getSelectedRow();
+        dtm = (DefaultTableModel)jTable1.getModel();        // holds reference of jTable1
+        int selectIndex = jTable1.getSelectedRow();        // store index number of selected row
         
+                // get data from selected jTable1's row
         String name = dtm.getValueAt(selectIndex, 1).toString();
         String section = dtm.getValueAt(selectIndex, 2).toString();
         
-        String sql = "delete from Class where Name='"+name+"'"+"and Section='"+section+"'";
+        String sql = "delete from Class where Name='"+name+"'"+"and Section='"+section+"'";     // delete query
         try
         {
             conn = javaConnect.connectDb();
@@ -331,13 +342,13 @@ public class Classes extends javax.swing.JFrame {
             pst.execute();
             
             JOptionPane.showMessageDialog(null, "Class Deleted Successfuly");
-            jButton1.setEnabled(true);
+            jButton1.setEnabled(true);      // after deletion save button should be enable
             
             pst.close();
             conn.close();
             
-            showData();
-            clear();
+            showData();     // fetch all the data from 'Class' table and show all in jTable1  
+            clear();        // clear input field
             
         }catch(Exception e)
         {

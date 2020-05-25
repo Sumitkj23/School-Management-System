@@ -25,14 +25,17 @@ public class Teacher_Home extends javax.swing.JFrame {
         
     }
 
+            // receive username and usertype
     public Teacher_Home(String u_name, String u_type) {
-        super("Admin Home Page");
+        super("Teacher Home Page");
         
-        this.utype = u_type;
-        this.uname = u_name;
+        this.utype = u_type;        // stores username
+        this.uname = u_name;        // stores usertype
+        
         initComponents();
-        jLabel3.setText(uname);
-        jLabel4.setText(utype);
+        
+        jLabel3.setText(uname);     // set username
+        jLabel4.setText(utype);     // set usertype
     }
 
     /**
@@ -228,6 +231,7 @@ public class Teacher_Home extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+                // Logout button code
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         setVisible(false);
@@ -235,6 +239,7 @@ public class Teacher_Home extends javax.swing.JFrame {
         ob.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
+                // Exit button code
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
         int i = JOptionPane.showConfirmDialog(null, "Are You Sure??? You Want To Exit!!!", "School Management System", JOptionPane.YES_NO_OPTION);
@@ -242,6 +247,8 @@ public class Teacher_Home extends javax.swing.JFrame {
             System.exit(0);
     }//GEN-LAST:event_jButton5ActionPerformed
 
+            // call the class, according to by clicking the button and also pass username and usertype into constructor
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         setVisible(false);

@@ -21,7 +21,7 @@ public class Subject extends javax.swing.JFrame {
     Connection conn;
     PreparedStatement pst;
     ResultSet rs;
-    DefaultTableModel dtm;
+    DefaultTableModel dtm;      // for holds jTable1
     
     String uname, utype;
     /**
@@ -30,19 +30,20 @@ public class Subject extends javax.swing.JFrame {
     public Subject() {
         
     }
-
+    
+            // receive username and usertype
     Subject(String uname, String utype) {
         super("Subject Information");
         
-        this.uname = uname;
-        this.utype = utype;
+        this.uname = uname;     // stores username
+        this.utype = utype;     // stores usertype
         
         initComponents();
         
-        showData();
+        showData();     // all previous stored data display on jTablel
     }
     
-    public void showData()
+    public void showData()      // fetch all data from 'Subject' table and put on jTable1
     {
         String sql = "select * from Subject";
         try
@@ -51,24 +52,25 @@ public class Subject extends javax.swing.JFrame {
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
             
-            dtm = (DefaultTableModel)jTable1.getModel();
-            dtm.setRowCount(0);
+            dtm = (DefaultTableModel)jTable1.getModel();    // take jTable1 reference
+            dtm.setRowCount(0);                             //  all the previos jTable1's data are vanish out
             
-            int s=1;
+            int s=1;        // for storing S.No
             
             while(rs.next())
             {
-                Vector v = new Vector();
+                Vector v = new Vector();    // for hold the data row by row
                 
-                v.add(s);
-                v.add(rs.getString("Id"));    // pass database column name
-                v.add(rs.getString("Name"));  // pass database column name
+                v.add(s);        // add S.No.
+                v.add(rs.getString("Id"));      // pass database column name
+                v.add(rs.getString("Name"));    // pass database column name
                 
-                dtm.addRow(v);
-                s++;
+                dtm.addRow(v);      // add row into jTable1 or display row in jTable1
+                s++;        // after adding the new row in jTable1, S.No. should be update by 1 for next row
             }
             
-            /*
+            /*       another way for display the data into jTable1
+            
             ResultSetMetaData rsd = rs.getMetaData();
             int c = rsd.getColumnCount();
             
@@ -100,16 +102,17 @@ public class Subject extends javax.swing.JFrame {
         }
     }
     
+        // validate to all input fields
     boolean validation()
     {
         boolean b = false;
         
-        if(jTextField1.getText().trim().isEmpty())
+        if(jTextField1.getText().trim().isEmpty())      // check 'Subject Id' will be entered or not
         {
             JOptionPane.showMessageDialog(null, "Plese Enter Subject Id");
             jTextField1.requestFocus();
         }
-        else if(jTextField2.getText().trim().isEmpty())
+        else if(jTextField2.getText().trim().isEmpty())     // check 'Subject Name' will be entered or not
         {
             JOptionPane.showMessageDialog(null, "Plese Enter Subject Name");
             jTextField2.requestFocus();
@@ -120,11 +123,12 @@ public class Subject extends javax.swing.JFrame {
         return b;
     }
     
-    void clear()
+    void clear()        // clear entered input data
     {
         jTextField1.setText("");
         jTextField2.setText("");
-        jTextField1.requestFocus();
+        
+        jTextField1.requestFocus();       // focus on 'Subject Id' field
     }
 
 
@@ -289,29 +293,33 @@ public class Subject extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+                // when clicks on any row of jTable1
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-        dtm = (DefaultTableModel)jTable1.getModel();
+        dtm = (DefaultTableModel)jTable1.getModel();        // holds reference of jTable1
         
-        int selectIndex = jTable1.getSelectedRow();
+        int selectIndex = jTable1.getSelectedRow();         // store index number of selected row
         
+                // set data into jTextField from corresponding jTable1's column data
         jTextField1.setText(dtm.getValueAt(selectIndex, 1).toString());
         jTextField2.setText(dtm.getValueAt(selectIndex, 2).toString());
         
-        saveSubject_Button.setEnabled(false);
+        saveSubject_Button.setEnabled(false);       // set 'save' button disable
+        jTextField1.requestFocus();                 // focus on 'Subject Id' field
     }//GEN-LAST:event_jTable1MouseClicked
 
+            // Save button code
     private void saveSubject_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSubject_ButtonActionPerformed
         // TODO add your handling code here:
-        if(validation())
+        if(validation())        // check validation
         {
-            String sql = "insert into Subject(Id, Name) values(?,?)";
+            String sql = "insert into Subject(Id, Name) values(?,?)";       // query for insert into 'Subject' table
             try
             {
                 conn = javaConnect.connectDb();
                 pst = conn.prepareStatement(sql);
-                pst.setString(1, jTextField1.getText().trim());
-                pst.setString(2, jTextField2.getText().trim());
+                pst.setString(1, jTextField1.getText().trim());     // take data from jTextField1
+                pst.setString(2, jTextField2.getText().trim());     // take data from jTextField2
 
                 pst.execute();
                 JOptionPane.showMessageDialog(null, "Subject Added");
@@ -319,8 +327,8 @@ public class Subject extends javax.swing.JFrame {
                 pst.close();
                 conn.close();
 
-                showData();
-                clear();
+                showData();     // fetch all the data from 'Subject' table and show all in jTable1
+                clear();        // clear all input field
 
             }catch(Exception e)
             {
@@ -329,12 +337,14 @@ public class Subject extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_saveSubject_ButtonActionPerformed
 
+                // Delete button code
     private void deleteSubject_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSubject_ButtonActionPerformed
         // TODO add your handling code here:
 
-        dtm = (DefaultTableModel)jTable1.getModel();
-        int selectIndex = jTable1.getSelectedRow();
+        dtm = (DefaultTableModel)jTable1.getModel();        // holds reference of jTable1
+        int selectIndex = jTable1.getSelectedRow();         // store index number of selected row
 
+                // get 'Subject Id' from selected jTable1's row
         String id = dtm.getValueAt(selectIndex, 1).toString();  // primary key
 
         String sql = "delete from Subject where Id='"+id+"'";
@@ -350,8 +360,9 @@ public class Subject extends javax.swing.JFrame {
             pst.close();
             conn.close();
             
-            showData();
-            clear();
+            showData();     // fetch all the data from 'Subject' table and show all in jTable1  
+            clear();        // clear input field
+            
         }catch(Exception e)
         {
             JOptionPane.showMessageDialog(null, e);
@@ -359,10 +370,11 @@ public class Subject extends javax.swing.JFrame {
 
     }//GEN-LAST:event_deleteSubject_ButtonActionPerformed
 
+            // Back button code
     private void back_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_ButtonActionPerformed
         // TODO add your handling code here:
         setVisible(false);
-        if(utype.equals("Admin"))
+        if(utype.equals("Admin"))       // check usertype
             new Admin_Home(uname,utype).setVisible(true);
         else
             new Teacher_Home(uname,utype).setVisible(true);
