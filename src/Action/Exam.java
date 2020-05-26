@@ -45,6 +45,8 @@ public class Exam extends javax.swing.JFrame {
         this.utype = utype;     // stores usertype
         
         initComponents();
+                
+        setResizable(false);        // set Maximize button disable
         
         loadComboBoxData();     //  fetch all the data from database and set into corresponding jComboBox
         showData();             // all previous stored data display on jTablel

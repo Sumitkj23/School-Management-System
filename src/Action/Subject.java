@@ -39,6 +39,8 @@ public class Subject extends javax.swing.JFrame {
         this.utype = utype;     // stores usertype
         
         initComponents();
+                
+        setResizable(false);        // set Maximize button disable
         
         showData();     // all previous stored data display on jTablel
     }

@@ -40,7 +40,9 @@ public class User extends javax.swing.JFrame {
         this.uname = uname;         // stores username
         this.utype = utype;         // stores usertype
         
-        initComponents();
+        initComponents();       
+        
+        setResizable(false);        // set Maximize button disable
         
         showData();            // all previous stored data display on jTablel
     }

@@ -35,6 +35,8 @@ public class Login extends javax.swing.JFrame {
         super("Login...");
         initComponents();
         
+        setResizable(false);        // set Maximize button disable
+        
         jTextField1.requestFocus();           // cursor stays on Username field
         jButton2.setBackground(Color.GRAY);
         jButton3.setBackground(Color.ORANGE);

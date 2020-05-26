@@ -34,6 +34,8 @@ public class Admin_Home extends javax.swing.JFrame {
         this.utype = u_type;    // stores usertype
         
         initComponents();
+                
+        setResizable(false);        // set Maximize button disable
         
         jLabel3.setText(uname);     // set username
         jLabel4.setText(utype);     // set usertype

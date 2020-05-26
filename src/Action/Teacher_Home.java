@@ -33,6 +33,8 @@ public class Teacher_Home extends javax.swing.JFrame {
         this.uname = u_name;        // stores usertype
         
         initComponents();
+                
+        setResizable(false);        // set Maximize button disable
         
         jLabel3.setText(uname);     // set username
         jLabel4.setText(utype);     // set usertype
